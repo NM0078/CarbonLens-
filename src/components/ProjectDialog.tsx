@@ -1,0 +1,73 @@
+import { useEffect, useState, type FormEvent } from 'react';
+import { X } from 'lucide-react';
+import type { Project, ProjectStatus } from '../types';
+import addressData from '../data/thai-addresses.json';
+import { Button } from './ui';
+
+const addressProvinces = addressData as { name: string; districts: { name: string; prefix: string; subdistricts: { name: string; prefix: string }[] }[] }[];
+
+export type ProjectFormValues = Omit<Project, 'id' | 'updated' | 'boundary'>;
+
+const EMPTY_FORM: ProjectFormValues = {
+  name: '', parcelName: '', province: '', district: '', village: '', manager: '', forestType: '',
+  landStatus: '', landEvidence: '', projectActivity: '', dominantSpecies: '', plantingYear: 0,
+  forestCondition: '', fieldEvidence: '', methodology: '', baselineHistory: '', inventoryNotes: '', description: '', area: 0, plots: 1, status: 'เตรียมข้อมูล',
+};
+
+export function ProjectDialog({ project, onClose, onSave }: { project: Project | null; onClose: () => void; onSave: (values: ProjectFormValues) => void }) {
+  const [form, setForm] = useState<ProjectFormValues>(EMPTY_FORM);
+  useEffect(() => {
+    setForm(project ? {
+      ...EMPTY_FORM, name: project.name, parcelName: project.parcelName || '', province: project.province,
+      district: project.district, village: project.village || '', manager: project.manager, forestType: project.forestType,
+      landStatus: project.landStatus || '', landEvidence: project.landEvidence || '', projectActivity: project.projectActivity || '',
+      dominantSpecies: project.dominantSpecies || '', plantingYear: project.plantingYear || 0,
+      forestCondition: project.forestCondition || '', fieldEvidence: project.fieldEvidence || '', methodology: project.methodology || '',
+      baselineHistory: project.baselineHistory || '', inventoryNotes: project.inventoryNotes || '', description: project.description,
+      area: project.area, plots: project.plots, status: project.status,
+    } : { ...EMPTY_FORM });
+  }, [project]);
+  const update = (field: keyof ProjectFormValues, value: string | number) => setForm((current) => ({ ...current, [field]: value }));
+  const selectedProvince = addressProvinces.find((place) => place.name === form.province);
+  const selectedDistrict = selectedProvince?.districts.find((place) => place.name === form.district);
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const provinceInput = event.currentTarget.querySelector<HTMLInputElement>('#carbonlens-province-input');
+    const districtInput = event.currentTarget.querySelector<HTMLInputElement>('#carbonlens-district-input');
+    const subdistrictInput = event.currentTarget.querySelector<HTMLInputElement>('#carbonlens-subdistrict-input');
+    provinceInput?.setCustomValidity(selectedProvince ? '' : 'กรุณาเลือกจังหวัดจากรายการ');
+    districtInput?.setCustomValidity(form.district && !selectedDistrict ? 'กรุณาเลือกอำเภอ/เขตจากรายการของจังหวัดที่เลือก' : '');
+    subdistrictInput?.setCustomValidity(form.village && !selectedDistrict?.subdistricts.some((place) => place.name === form.village) ? 'กรุณาเลือกตำบล/แขวงจากรายการของอำเภอที่เลือก' : '');
+    if (!event.currentTarget.reportValidity()) return;
+    onSave(form);
+  };
+
+  return <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}><form className="dialog-card project-form" onSubmit={submit} aria-labelledby="projectDialogTitle">
+    <button className="dialog-close" type="button" onClick={onClose} aria-label="ปิด"><X size={19} /></button><span className="dialog-icon">＋</span><h2 id="projectDialogTitle">{project ? 'แก้ไขข้อมูลแปลง' : 'กรอกข้อมูลแปลงใหม่'}</h2><p>กรอกข้อมูลเบื้องต้นเพื่อเตรียมตรวจสอบโครงการป่าไม้</p>
+    <h3 className="intake-form-section">ข้อมูลโครงการและที่ตั้ง</h3>
+    <label>ชื่อโครงการ<input required value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="เช่น ฟื้นฟูป่าชุมชนบ้าน..." /></label>
+    <div className="form-two"><label>ชื่อแปลง<input value={form.parcelName || ''} onChange={(e) => update('parcelName', e.target.value)} placeholder="เช่น แปลง A" /></label><label>จังหวัด<input id="carbonlens-province-input" required list="carbonlens-provinces" value={form.province} onChange={(e) => setForm((current) => ({ ...current, province: e.target.value, district: '', village: '' }))} placeholder="พิมพ์ค้นหาจังหวัด" autoComplete="off" /><datalist id="carbonlens-provinces">{addressProvinces.map((place) => <option key={place.name} value={place.name} />)}</datalist></label></div>
+    <div className="form-two"><label>อำเภอ/เขต<input id="carbonlens-district-input" list="carbonlens-districts" value={form.district} onChange={(e) => setForm((current) => ({ ...current, district: e.target.value, village: '' }))} placeholder={selectedProvince ? 'พิมพ์ค้นหาอำเภอ/เขต' : 'เลือกจังหวัดก่อน'} disabled={!selectedProvince} autoComplete="off" /><datalist id="carbonlens-districts">{(selectedProvince?.districts || []).map((place) => <option key={place.name} value={place.name} label={`${place.prefix}${place.name}`} />)}</datalist></label><label>ตำบล/แขวง<input id="carbonlens-subdistrict-input" list="carbonlens-subdistricts" value={form.village || ''} onChange={(e) => update('village', e.target.value)} placeholder={selectedDistrict ? 'พิมพ์ค้นหาตำบล/แขวง' : 'เลือกอำเภอก่อน'} disabled={!selectedDistrict} autoComplete="off" /><datalist id="carbonlens-subdistricts">{(selectedDistrict?.subdistricts || []).map((place) => <option key={place.name} value={place.name} label={`${place.prefix}${place.name}`} />)}</datalist></label></div>
+    <small className="address-search-hint">พิมพ์ชื่อเพื่อค้นหา • รายการอำเภอ/เขตและตำบล/แขวงจะเปลี่ยนตามพื้นที่ที่เลือก</small>
+    <label>ผู้ประสานงาน<input value={form.manager} onChange={(e) => update('manager', e.target.value)} placeholder="ชื่อผู้ประสานงานโครงการ" /></label>
+    <div className="form-two"><label>พื้นที่ป่า<select value={form.forestType} onChange={(e) => update('forestType', e.target.value)}><option value="">เลือกประเภทพื้นที่ป่า</option>{['ป่าต้นน้ำ','ป่าชุมชน','ป่าอนุรักษ์','ป่าฟื้นฟู','ป่าเศรษฐกิจ','อื่น ๆ'].map((type) => <option key={type}>{type}</option>)}</select></label><label>สถานะข้อมูล<select value={form.status} onChange={(e) => update('status', e.target.value as ProjectStatus)}>{['เตรียมข้อมูล','รอตรวจสอบ','กำลังดำเนินการ'].map((status) => <option key={status}>{status}</option>)}</select></label></div>
+    <div className="form-two"><label>พื้นที่รวมโดยประมาณ (ไร่)<input type="number" min="0" step="0.01" value={form.area || ''} onChange={(e) => update('area', Number(e.target.value))} placeholder="0" /></label><label>จำนวนแปลง<input type="number" min="1" step="1" value={form.plots} onChange={(e) => update('plots', Number(e.target.value))} /></label></div>
+
+    <h3 className="intake-form-section">สิทธิพื้นที่และขอบเขต</h3>
+    <label>สถานะสิทธิ/การใช้พื้นที่<input value={form.landStatus || ''} onChange={(e) => update('landStatus', e.target.value)} placeholder="ระบุข้อมูลที่ทราบ หรือเขียนว่า รอตรวจสอบ" /></label>
+    <label>เอกสารสิทธิ์หรือหลักฐานที่มี<textarea rows={2} value={form.landEvidence || ''} onChange={(e) => update('landEvidence', e.target.value)} placeholder="เช่น หนังสือรับรองพื้นที่ เอกสารจากชุมชน หรือยังไม่มี" /></label>
+    <p className="intake-map-hint">ขอบเขตพิกัดและการคำนวณพื้นที่จากแผนที่: บันทึกต่อได้ที่เมนู “แผนที่และขอบเขต” หลังสร้างแปลง</p>
+
+    <h3 className="intake-form-section">สภาพป่าและกิจกรรมโครงการ</h3>
+    <div className="form-two"><label>กิจกรรมหลัก<select value={form.projectActivity || ''} onChange={(e) => update('projectActivity', e.target.value)}><option value="">เลือกกิจกรรม</option>{['อนุรักษ์ป่า','ฟื้นฟูป่า','ปลูกป่า','ป้องกันการบุกรุก','อื่น ๆ'].map((activity) => <option key={activity}>{activity}</option>)}</select></label><label>ปีเริ่มกิจกรรม (พ.ศ.)<input type="number" min="2400" max="2700" value={form.plantingYear || ''} onChange={(e) => update('plantingYear', Number(e.target.value))} placeholder="เช่น 2568" /></label></div>
+    <label>ชนิดไม้หลักที่พบ/ปลูก<input value={form.dominantSpecies || ''} onChange={(e) => update('dominantSpecies', e.target.value)} placeholder="ระบุชนิดไม้ หากทราบ" /></label>
+    <label>สภาพป่าปัจจุบัน<textarea rows={2} value={form.forestCondition || ''} onChange={(e) => update('forestCondition', e.target.value)} placeholder="เช่น ป่าดิบเขา พื้นที่เสื่อมโทรม ความหนาแน่นโดยประมาณ" /></label>
+    <h3 className="intake-form-section">ข้อมูลพื้นฐานประกอบการประเมิน</h3>
+    <label>ระเบียบวิธี (ถ้าทราบ)<input value={form.methodology || ''} onChange={(e) => update('methodology', e.target.value)} placeholder="กรอกชื่อระเบียบวิธี หรือเว้นไว้หากยังไม่ทราบ" /></label>
+    <label>ประวัติการใช้พื้นที่ก่อนเริ่มโครงการ<textarea rows={2} value={form.baselineHistory || ''} onChange={(e) => update('baselineHistory', e.target.value)} placeholder="ข้อมูลที่ทราบเกี่ยวกับสภาพหรือการใช้พื้นที่เดิม" /></label>
+    <label>ข้อมูลสำรวจต้นไม้/ตัวอย่างแปลง<textarea rows={2} value={form.inventoryNotes || ''} onChange={(e) => update('inventoryNotes', e.target.value)} placeholder="เช่น ชนิดไม้ จำนวนตัวอย่าง ขนาดต้นไม้ หรือวันที่สำรวจ หากมี" /></label>
+    <label>บันทึกการสำรวจและหลักฐานภาคสนาม<textarea rows={2} value={form.fieldEvidence || ''} onChange={(e) => update('fieldEvidence', e.target.value)} placeholder="รายการที่สำรวจ วันที่สำรวจ ภาพถ่าย หรือข้อมูลที่ยังต้องยืนยัน" /></label>
+    <label>รายละเอียดเพิ่มเติม<textarea rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} placeholder="เป้าหมายและรายละเอียดโครงการ" /></label>
+    <Button variant="primary" className="dialog-submit" type="submit">{project ? 'บันทึกข้อมูลแปลง' : 'บันทึกข้อมูลแปลง'}</Button><small>ต้นแบบนี้บันทึกในเบราว์เซอร์ ยังไม่ส่งขึ้น backend และไม่ใช่ผลประเมินหรือเครดิตรับรอง</small>
+  </form></div>;
+}
