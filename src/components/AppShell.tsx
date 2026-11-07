@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import {
-  Bell, ChevronDown, ClipboardCheck, Database, FileText, LayoutDashboard,
+  Bell, ChevronDown, ClipboardCheck, Database, LayoutDashboard,
   LockKeyhole, Menu, TreePine, Sprout, X,
 } from 'lucide-react';
 import type { PageId, Project } from '../types';
@@ -12,7 +12,6 @@ const NAV: Array<{ id: PageId; label: string; icon: typeof LayoutDashboard }> = 
   { id: 'projects', label: 'แปลงของฉัน', icon: Database },
   { id: 'assessment', label: 'ประเมินโครงการและคาร์บอน', icon: TreePine },
   { id: 'field', label: 'ตรวจสอบภาคสนาม', icon: ClipboardCheck },
-  { id: 'reports', label: 'รายงาน', icon: FileText },
 ];
 
 export function AppShell({ page, onNavigate, onLogout, onNotify, projects, user, guestMode = false, children }: {
@@ -47,13 +46,13 @@ export function AppShell({ page, onNavigate, onLogout, onNotify, projects, user,
       </button>
       <div className="nav-label">ภาพรวมและการดำเนินงาน</div>
       <nav className="nav-list" aria-label="เมนูหลัก">
-        {NAV.map(({ id, label, icon: Icon }) => { const guestLocked = guestMode && !['dashboard','map','assessment','reports'].includes(id); return <a key={id} data-page={id} className={`nav-item ${page === id ? 'active' : ''} ${guestLocked ? 'guest-locked' : ''}`} href={`#${id}`} onClick={(event) => { event.preventDefault(); go(id); }}>
+        {NAV.map(({ id, label, icon: Icon }) => { const guestLocked = guestMode && !['dashboard','map','assessment'].includes(id); return <a key={id} data-page={id} className={`nav-item ${page === id ? 'active' : ''} ${guestLocked ? 'guest-locked' : ''}`} href={`#${id}`} onClick={(event) => { event.preventDefault(); go(id); }}>
           <Icon className="nav-icon" size={16} strokeWidth={1.8} />{label}{guestLocked ? <LockKeyhole size={14} className="guest-lock-icon" /> : id === 'projects' && <span className="nav-count">{projects.reduce((total, item) => total + Number(item.plots || 1), 0)}</span>}{id === 'field' && !guestMode && <span className="dot-count">3</span>}
         </a>; })}
       </nav>
       <div className="sidebar-bottom">
         {guestMode && <div className="guest-note"><b>โหมดเยี่ยมชม</b><p>ดูหน้าตัวอย่างได้ บางหน้าต้องเข้าสู่ระบบ</p><button type="button" onClick={onLogout}>เข้าสู่ระบบ / สมัครสมาชิก</button></div>}
-        {!guestMode && <div className="help-card"><span className="help-icon">✳</span><b>เริ่มต้นใช้งาน</b><p>เตรียมข้อมูลโครงการสวนยางพาราให้พร้อมตรวจสอบ</p><a href="#reports" onClick={(e) => { e.preventDefault(); go('reports'); }}>ดูรายงานและคู่มือ <span>↗</span></a></div>}
+        {!guestMode && <div className="help-card"><span className="help-icon">✳</span><b>เริ่มต้นใช้งาน</b><p>เตรียมข้อมูลโครงการสวนยางพาราให้พร้อมตรวจสอบ</p><a href="#projects" onClick={(e) => { e.preventDefault(); go('projects'); }}>ดูและดาวน์โหลดเอกสารโครงการ <span>↗</span></a></div>}
         <div className="profile"><div className="profile-identity"><span className="profile-avatar">{initials}</span><span><b>{guestMode ? 'ผู้เยี่ยมชม' : user.name}</b><small>{guestMode ? 'เข้าชมแบบอ่านอย่างเดียว' : user.email}</small></span></div></div>
       </div>
     </aside>
