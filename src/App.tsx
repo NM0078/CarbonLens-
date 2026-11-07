@@ -4,7 +4,6 @@ import { ProjectDialog, type ProjectFormValues } from './components/ProjectDialo
 import { Toast } from './components/Toast';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProjectsPage } from './pages/ProjectsPage';
-import { MapPage } from './pages/MapPage';
 import { AssessmentPage } from './pages/AssessmentPage';
 import { FieldPage } from './pages/FieldPage';
 import { ReportsPage } from './pages/ReportsPage';
@@ -18,14 +17,13 @@ import { DEMO_PROJECTS } from './data/demo';
 import type { PageId, Project, ToastMessage } from './types';
 
 const GUEST_USER: AuthUser = { id: 'guest', name: 'ผู้เยี่ยมชม', firstName: 'ผู้เยี่ยมชม', lastName: '', email: 'โหมดเข้าชมเท่านั้น' };
-const GUEST_PAGES: PageId[] = ['dashboard', 'map', 'assessment', 'reports'];
+const GUEST_PAGES: PageId[] = ['dashboard', 'assessment', 'reports'];
 
 function pageFromHash(): PageId {
   const hash = window.location.hash.slice(1);
-  if (hash === 'satellite') return 'map';
-  if (hash === 'carbon') return 'assessment';
+  if (hash === 'satellite' || hash === 'map' || hash === 'carbon') return 'assessment';
   const page = hash as PageId;
-  return ['dashboard','projects','map','assessment','field','reports','profile'].includes(page) ? page : 'projects';
+  return ['dashboard','projects','assessment','field','reports','profile'].includes(page) ? page : 'projects';
 }
 
 export default function App() {
@@ -51,6 +49,7 @@ export default function App() {
   useEffect(() => { const handleHash = () => { const next = pageFromHash(); if (guestMode && !GUEST_PAGES.includes(next)) { setPage('dashboard'); window.history.replaceState(null, '', '#dashboard'); notify('หน้านี้สำหรับสมาชิก กรุณาเข้าสู่ระบบหรือสมัครสมาชิก'); } else setPage(next); }; window.addEventListener('hashchange', handleHash); return () => window.removeEventListener('hashchange', handleHash); }, [guestMode, notify]);
 
   const navigate = (next: PageId) => {
+    if (next === 'map') next = 'assessment';
     if (guestMode && !GUEST_PAGES.includes(next)) { notify('หน้านี้สำหรับสมาชิก กรุณาเข้าสู่ระบบหรือสมัครสมาชิก'); return; }
     if (onboardingRequired && next !== 'projects') { notify('กรอกและบันทึกข้อมูลแปลงก่อนเข้าสู่ภาพรวมโครงการ'); return; }
     setPage(next); window.history.replaceState(null, '', `#${next}`); document.querySelector('.app-shell .main-area')?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -110,8 +109,8 @@ export default function App() {
   switch (page) {
     case 'dashboard': content = <DashboardPage projects={projects} userName={guestMode ? 'ผู้เยี่ยมชม' : activeUser.name} guestMode={guestMode} onAdd={() => guestMode ? notify('สมัครสมาชิกหรือเข้าสู่ระบบเพื่อเพิ่มโครงการ') : setCreateProjectOpen(true)} onNavigate={navigate} />; break;
     case 'projects': content = <ProjectsPage projects={projects} onSave={saveProject} onDelete={deleteProject} onNotify={notify} />; break;
-    case 'map': content = <MapPage projects={projects} onSave={saveBoundary} onNotify={notify} guestMode={guestMode} />; break;
-    case 'assessment': content = <AssessmentPage project={projects[0]} onNavigate={navigate} />; break;
+    case 'map':
+    case 'assessment': content = <AssessmentPage projects={projects} project={projects[0]} onSaveBoundary={saveBoundary} onNotify={notify} guestMode={guestMode} onNavigate={navigate} />; break;
     case 'field': content = <FieldPage onNotify={notify} />; break;
     case 'reports': content = <ReportsPage projects={projects} onNotify={notify} />; break;
     case 'profile': content = <ProfilePage user={activeUser} onLogout={logout} onGoogleLink={() => { void startGoogleAuth('link').catch((error) => notify(error instanceof Error ? error.message : 'ยังเชื่อมต่อ Google ไม่ได้')); }} />; break;

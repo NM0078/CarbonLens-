@@ -244,3 +244,5 @@ body { background: #f5f7f4; }
 .assessment-action-row b, .assessment-action-row small { display: block; }
 .assessment-action-row small { margin-top: 3px; color: #536258; font-size: 12px; }
 @media (max-width: 600px) { .simple-readiness-row { grid-template-columns: 26px minmax(0,1fr); } .simple-readiness-row strong { grid-column: 2; margin-top: -5px; } .assessment-action-row { flex-wrap: wrap; } .assessment-action-row > .button { margin-left: 50px; } }
+
+.embedded-map-section{margin:18px 0 24px}.embedded-map-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.embedded-map-heading h2{font-size:18px;margin:0}.embedded-map-section .map-workspace{margin:0}.embedded-map-section .boundary-side{align-self:stretch}
