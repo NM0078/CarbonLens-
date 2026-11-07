@@ -38,7 +38,7 @@ function fromBase64(value: string): Uint8Array {
 async function hashPassword(password: string, salt: Uint8Array): Promise<string> {
   if (!crypto.subtle) throw new Error('เบราว์เซอร์นี้ไม่รองรับการจัดเก็บบัญชีสาธิตอย่างปลอดภัย');
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: ITERATIONS, hash: 'SHA-256' }, key, 256);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new Uint8Array(salt).buffer as ArrayBuffer, iterations: ITERATIONS, hash: 'SHA-256' }, key, 256);
   return toBase64(new Uint8Array(bits));
 }
 
