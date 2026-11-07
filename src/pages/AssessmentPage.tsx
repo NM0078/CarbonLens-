@@ -18,7 +18,7 @@ export function AssessmentPage({ project, onNavigate }: { project?: Project; onN
       <Panel title="ความพร้อมของข้อมูล" subtitle={`มีข้อมูลเบื้องต้น ${readyCount} จาก ${items.length} รายการ`} action={<span className="mock-tag">ตรวจจากข้อมูลที่บันทึก</span>} className="score-panel">
         <div className="simple-readiness-list">{items.map((item) => <div className="simple-readiness-row" key={item.title}><span className={item.ready ? 'is-ready' : 'is-pending'}>{item.ready ? <CheckCircle2 size={18} /> : <CircleAlert size={18} />}</span><span><b>{item.title}</b><small>{item.detail}</small></span><strong>{item.ready ? 'มีข้อมูล' : 'รอข้อมูล'}</strong></div>)}</div>
       </Panel>
-      <Panel title="คาร์บอนเครดิตเบื้องต้น" subtitle="ยังไม่มีผลคำนวณสำหรับโครงการนี้" action={<span className="estimate-tag">ยังไม่ประเมิน</span>} className="model-note simple-carbon-card">
+      <Panel title="คาร์บอนเครดิตเบื้องต้น" subtitle="ยังไม่มีผลคำนวณสำหรับโครงการนี้" action={<span className="estimate-tag">ยังไม่ประเมิน</span>} className="simple-carbon-card">
         <div className="simple-carbon-value"><span>ปริมาณคาร์บอน</span><b>— <small>tCO₂e</small></b></div>
         <p>ต้องตรวจข้อมูลจริงและเลือกวิธีการที่เหมาะสมก่อน จึงจะประเมินได้ ตัวเลขนี้ไม่ใช่เครดิตรับรองและไม่ใช่ปริมาณพร้อมขาย</p>
       </Panel>

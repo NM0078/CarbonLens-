@@ -231,6 +231,7 @@ body { background: #f5f7f4; }
 .simple-readiness-row b { color: #24362b; font-size: 14px; }
 .simple-readiness-row small { margin-top: 3px; color: #536258; font-size: 12px; }
 .simple-readiness-row strong { color: #384c3f; font-size: 12px; }
+.simple-carbon-card { background: #f6f8f3; }
 .simple-carbon-value { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #edf0eb; color: #33483a; }
 .simple-carbon-value b { color: #254d34; font-size: 28px; }
 .simple-carbon-value small { font-size: 13px; }
