@@ -7,10 +7,11 @@ import { DEMO_PLACES } from '../data/demo';
 import { areaUnits, geodesicArea } from '../domain/geometry';
 import type { Project } from '../types';
 import { Button, Notice, PageHeader } from '../components/ui';
+import { SatellitePreview } from './SatellitePage';
 
 type PolygonFeature = Feature<Polygon>;
 
-export function MapPage({ projects, onSave, onNotify }: { projects: Project[]; onSave: (id: string, feature: PolygonFeature, rai: number, parcelName: string) => void; onNotify: (message: string) => void }) {
+export function MapPage({ projects, onSave, onNotify, guestMode = false }: { projects: Project[]; onSave: (id: string, feature: PolygonFeature, rai: number, parcelName: string) => void; onNotify: (message: string) => void; guestMode?: boolean }) {
   const mapHost = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const drawn = useRef<L.FeatureGroup | null>(null);
@@ -39,8 +40,10 @@ export function MapPage({ projects, onSave, onNotify }: { projects: Project[]; o
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(instance);
     const group = new L.FeatureGroup(); group.addTo(instance);
     map.current = instance; drawn.current = group;
-    const DrawControl = (L.Control as unknown as { Draw: new (options: object) => L.Control }).Draw;
-    instance.addControl(new DrawControl({ position: 'topleft', draw: { polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#28744f', fillColor: '#8fb982', fillOpacity: 0.27 } }, rectangle: false, circle: false, circlemarker: false, polyline: false, marker: false }, edit: { featureGroup: group, remove: true } }));
+    if (!guestMode) {
+      const DrawControl = (L.Control as unknown as { Draw: new (options: object) => L.Control }).Draw;
+      instance.addControl(new DrawControl({ position: 'topleft', draw: { polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#28744f', fillColor: '#8fb982', fillOpacity: 0.27 } }, rectangle: false, circle: false, circlemarker: false, polyline: false, marker: false }, edit: { featureGroup: group, remove: true } }));
+    }
     instance.on('draw:created', (event: L.LeafletEvent & { layer: L.Layer }) => { group.clearLayers(); const layer = event.layer as L.Polygon; group.addLayer(layer); updateGeometry(layer); });
     instance.on('draw:edited', () => updateGeometry(polygon.current));
     instance.on('draw:deleted', () => updateGeometry(null));
@@ -49,8 +52,7 @@ export function MapPage({ projects, onSave, onNotify }: { projects: Project[]; o
     const resize = () => instance.invalidateSize(); window.setTimeout(resize, 100); window.addEventListener('resize', resize);
     return () => { window.removeEventListener('resize', resize); instance.remove(); map.current = null; drawn.current = null; polygon.current = null; };
     // The first project seeds this view; project changes are loaded by the effect below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [guestMode]);
 
   useEffect(() => {
     if (!map.current || !drawn.current) return;
@@ -97,10 +99,11 @@ export function MapPage({ projects, onSave, onNotify }: { projects: Project[]; o
 
   const units = areaUnits(area);
   return <section className="page active">
-    <PageHeader eyebrow={`${selected?.name ?? 'ยังไม่มีโ้รงการ'} / แปลง`} title="กำหนดขอบเขตพื้นที่" subtitle="้้นหาสถานที่หรือพิกัด แล้ววาดหรือแก้ไข Polygon บนแผนที่" action={<Button variant="primary" disabled={!selected || !polygon.current} onClick={() => { if (selected && polygon.current) onSave(selected.id, polygon.current.toGeoJSON() as PolygonFeature, units.rai, parcelName); }}>บันทึกขอบเขต</Button>} />
+    <PageHeader eyebrow={`${selected?.name ?? 'ยังไม่มีโครงการ'} / แปลง`} title="แผนที่และขอบเขต" subtitle="ค้นหาสถานที่หรือพิกัด แล้วกำหนดขอบเขตแปลง พร้อมดูข้อมูลดาวเทียมในหน้านี้" action={<Button variant="primary" disabled={guestMode || !selected || !polygon.current} onClick={() => { if (selected && polygon.current) onSave(selected.id, polygon.current.toGeoJSON() as PolygonFeature, units.rai, parcelName); }}>บันทึกขอบเขต</Button>} />
     <Notice>แผนที่ OpenStreetMap แสดงตำแหน่งจริง พื้นที่้ำนวณจากพิกัด WGS84 แบบ spherical geodesic เพื่อสาธิต ้วรยืนยันด้วย GIS ก่อนใช้จริง</Notice>
     <div className="map-workspace"><section className="panel map-editor"><div className="map-toolbar"><div><b>แผนที่ประเทศไทย · OpenStreetMap</b><small>ใช้เ้รื่องมือวาด/แก้ไขที่มุมซ้ายบนของแผนที่</small></div><div className="map-tools"><input className="place-search" value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') searchPlace(); }} placeholder="้้นหาสถานที่หรือ lat, lon" aria-label="้้นหาสถานที่หรือพิกัด" /><button className="tool-btn" onClick={searchPlace}><Search size={13} /> ้้นหา</button><button className="tool-btn" onClick={() => map.current?.setView([15.87, 100.99], 6)}><LocateFixed size={13} /> ประเทศไทย</button></div></div><div className="editor-map"><div id="carbonlens-leaflet-map" ref={mapHost} aria-label="แผนที่วาดขอบเขตแปลง" /></div><div className="map-footer"><span><i className="green-dot" /> วาด / แก้ไข / ลบ Polygon</span><span>{coordinates.length ? `${Math.max(0, coordinates.length - 1)} จุด · GeoJSON` : 'ยังไม่มี Polygon'}</span></div></section>
-      <aside className="panel boundary-side"><h2>รายละเอียดแปลง</h2><p>พิกัด WGS84 · พื้นที่จาก Polygon</p><label>โ้รงการ<select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>{projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select></label><label>ชื่อแปลง<input value={parcelName} onChange={(e) => setParcelName(e.target.value)} /></label><div className="area-card"><span>พื้นที่จากพิกัด</span><b>{area ? units.rai.toLocaleString('th-TH', { maximumFractionDigits: 2 }) : '—'} <small>ไร่</small></b><small>{area ? `${units.hectares.toLocaleString('th-TH', { maximumFractionDigits: 3 })} เฮกตาร์ · ${units.squareMeters.toLocaleString('th-TH', { maximumFractionDigits: 1 })} ตร.ม.` : '— เฮกตาร์ · — ตร.ม.'}</small></div><div className="coordinate-box"><b>พิกัด Polygon</b><pre>{coordinates.length ? coordinates.map((point, index) => `${index + 1}. ${point[0].toFixed(6)}, ${point[1].toFixed(6)}`).join('\n') : 'ยังไม่มีขอบเขต'}</pre></div><input ref={fileRef} type="file" accept=".geojson,.json" hidden onChange={(e) => void importGeoJson(e.target.files?.[0])} /><button className="upload-box" onClick={() => fileRef.current?.click()}><Upload size={15} /><b>นำเข้า GeoJSON</b><small>ไฟล์ .geojson หรือ .json</small></button><Button className="export-geojson" onClick={exportGeoJson}><Download size={13} /> ส่งออก GeoJSON</Button><div className="side-hint"><span>ⓘ</span> ขอบเขตและพื้นที่บันทึกในเบราว์เซอร์นี้ ยังไม่ส่ง backend</div></aside>
+      <aside className="panel boundary-side"><h2>รายละเอียดแปลง</h2><p>พิกัด WGS84 · พื้นที่จาก Polygon</p><label>โครงการ<select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>{projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select></label><label>ชื่อแปลง<input value={parcelName} onChange={(e) => setParcelName(e.target.value)} /></label><div className="area-card"><span>พื้นที่จากพิกัด</span><b>{area ? units.rai.toLocaleString('th-TH', { maximumFractionDigits: 2 }) : '—'} <small>ไร่</small></b><small>{area ? `${units.hectares.toLocaleString('th-TH', { maximumFractionDigits: 3 })} เฮกตาร์ · ${units.squareMeters.toLocaleString('th-TH', { maximumFractionDigits: 1 })} ตร.ม.` : '— เฮกตาร์ · — ตร.ม.'}</small></div><div className="coordinate-box"><b>พิกัด Polygon</b><pre>{coordinates.length ? coordinates.map((point, index) => `${index + 1}. ${point[0].toFixed(6)}, ${point[1].toFixed(6)}`).join('\n') : 'ยังไม่มีขอบเขต'}</pre></div><input ref={fileRef} type="file" accept=".geojson,.json" hidden onChange={(e) => void importGeoJson(e.target.files?.[0])} /><button className="upload-box" disabled={guestMode} onClick={() => fileRef.current?.click()}><Upload size={15} /><b>นำเข้า GeoJSON</b><small>ไฟล์ .geojson หรือ .json</small></button><Button className="export-geojson" disabled={!polygon.current} onClick={exportGeoJson}><Download size={13} /> ส่งออก GeoJSON</Button><div className="side-hint"><span>ⓘ</span> {guestMode ? 'โหมดเยี่ยมชมดูแผนที่และข้อมูลดาวเทียมได้ แต่บันทึกขอบเขตไม่ได้' : 'ขอบเขตและพื้นที่บันทึกในเบราว์เซอร์นี้ ยังไม่ส่ง backend'}</div></aside>
     </div>
+    <SatellitePreview onNotify={onNotify} />
   </section>;
 }

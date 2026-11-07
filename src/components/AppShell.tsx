@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import {
   Activity, Bell, ChevronDown, ClipboardCheck, Database, FileText, LayoutDashboard,
-  LockKeyhole, MapPinned, Menu, Satellite, TreePine, Sprout, X,
+  LockKeyhole, MapPinned, Menu, TreePine, Sprout, X,
 } from 'lucide-react';
 import type { PageId, Project } from '../types';
 import type { AuthUser } from '../services/auth';
@@ -11,7 +11,6 @@ const NAV: Array<{ id: PageId; label: string; icon: typeof LayoutDashboard }> = 
   { id: 'dashboard', label: 'ภาพรวมโครงการ', icon: LayoutDashboard },
   { id: 'projects', label: 'แปลงของฉัน', icon: Database },
   { id: 'map', label: 'แผนที่และขอบเขต', icon: MapPinned },
-  { id: 'satellite', label: 'ภาพดาวเทียม', icon: Satellite },
   { id: 'assessment', label: 'ประเมินข้อมูลด้วย AI', icon: Activity },
   { id: 'carbon', label: 'คาร์บอนเครดิต', icon: TreePine },
   { id: 'field', label: 'ตรวจสอบภาคสนาม', icon: ClipboardCheck },
@@ -50,7 +49,7 @@ export function AppShell({ page, onNavigate, onLogout, onNotify, projects, user,
       </button>
       <div className="nav-label">ภาพรวมและการดำเนินงาน</div>
       <nav className="nav-list" aria-label="เมนูหลัก">
-        {NAV.map(({ id, label, icon: Icon }) => { const guestLocked = guestMode && !['dashboard','satellite','assessment','carbon','reports'].includes(id); return <a key={id} data-page={id} className={`nav-item ${page === id ? 'active' : ''} ${guestLocked ? 'guest-locked' : ''}`} href={`#${id}`} onClick={(event) => { event.preventDefault(); go(id); }}>
+        {NAV.map(({ id, label, icon: Icon }) => { const guestLocked = guestMode && !['dashboard','map','assessment','carbon','reports'].includes(id); return <a key={id} data-page={id} className={`nav-item ${page === id ? 'active' : ''} ${guestLocked ? 'guest-locked' : ''}`} href={`#${id}`} onClick={(event) => { event.preventDefault(); go(id); }}>
           <Icon className="nav-icon" size={16} strokeWidth={1.8} />{label}{guestLocked ? <LockKeyhole size={14} className="guest-lock-icon" /> : id === 'projects' && <span className="nav-count">{projects.reduce((total, item) => total + Number(item.plots || 1), 0)}</span>}{id === 'field' && !guestMode && <span className="dot-count">3</span>}
         </a>; })}
       </nav>

@@ -1,6 +1,6 @@
 import type { Feature, Polygon } from 'geojson';
 
-export type PageId = 'dashboard' | 'projects' | 'map' | 'satellite' | 'assessment' | 'carbon' | 'field' | 'reports' | 'profile';
+export type PageId = 'dashboard' | 'projects' | 'map' | 'assessment' | 'carbon' | 'field' | 'reports' | 'profile';
 export type ProjectStatus = 'กำลังดำเนินการ' | 'รอตรวจสอบ' | 'เตรียมข้อมูล';
 export type VerificationStatus = 'ยังไม่ตรวจสอบ' | 'รอตรวจสอบ' | 'ตรวจสอบแล้ว' | 'ต้องแก้ไขข้อมูล';
 

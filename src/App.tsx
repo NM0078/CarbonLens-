@@ -5,7 +5,6 @@ import { Toast } from './components/Toast';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { MapPage } from './pages/MapPage';
-import { SatellitePage } from './pages/SatellitePage';
 import { AssessmentPage } from './pages/AssessmentPage';
 import { CarbonPage } from './pages/CarbonPage';
 import { FieldPage } from './pages/FieldPage';
@@ -20,11 +19,13 @@ import { DEMO_PROJECTS } from './data/demo';
 import type { PageId, Project, ToastMessage } from './types';
 
 const GUEST_USER: AuthUser = { id: 'guest', name: 'ผู้เยี่ยมชม', firstName: 'ผู้เยี่ยมชม', lastName: '', email: 'โหมดเข้าชมเท่านั้น' };
-const GUEST_PAGES: PageId[] = ['dashboard', 'satellite', 'assessment', 'carbon', 'reports'];
+const GUEST_PAGES: PageId[] = ['dashboard', 'map', 'assessment', 'carbon', 'reports'];
 
 function pageFromHash(): PageId {
-  const page = window.location.hash.slice(1) as PageId;
-  return ['dashboard','projects','map','satellite','assessment','carbon','field','reports','profile'].includes(page) ? page : 'projects';
+  const hash = window.location.hash.slice(1);
+  if (hash === 'satellite') return 'map';
+  const page = hash as PageId;
+  return ['dashboard','projects','map','assessment','carbon','field','reports','profile'].includes(page) ? page : 'projects';
 }
 
 export default function App() {
@@ -109,8 +110,7 @@ export default function App() {
   switch (page) {
     case 'dashboard': content = <DashboardPage projects={projects} userName={guestMode ? 'ผู้เยี่ยมชม' : activeUser.name} guestMode={guestMode} onAdd={() => guestMode ? notify('สมัครสมาชิกหรือเข้าสู่ระบบเพื่อเพิ่มโครงการ') : setCreateProjectOpen(true)} onNavigate={navigate} />; break;
     case 'projects': content = <ProjectsPage projects={projects} onSave={saveProject} onDelete={deleteProject} onNotify={notify} />; break;
-    case 'map': content = <MapPage projects={projects} onSave={saveBoundary} onNotify={notify} />; break;
-    case 'satellite': content = <SatellitePage onNotify={notify} />; break;
+    case 'map': content = <MapPage projects={projects} onSave={saveBoundary} onNotify={notify} guestMode={guestMode} />; break;
     case 'assessment': content = <AssessmentPage onNavigate={navigate} />; break;
     case 'carbon': content = <CarbonPage project={projects[0]} onNavigate={navigate} />; break;
     case 'field': content = <FieldPage onNotify={notify} />; break;
