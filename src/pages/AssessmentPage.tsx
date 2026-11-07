@@ -1,24 +1,30 @@
-import { ArrowRight, BrainCircuit, Database, Layers3, ScanSearch, Workflow } from 'lucide-react';
-import type { PageId } from '../types';
+import { ArrowRight, CheckCircle2, CircleAlert, ClipboardCheck, MapPinned } from 'lucide-react';
+import type { Project } from '../types';
 import { Button, Notice, PageHeader, Panel } from '../components/ui';
 
-const stages = [
-  { title: 'Satellite Data', subtitle: 'Sentinel-2 · Bands', icon: SatelliteIcon },
-  { title: 'Preprocessing', subtitle: 'Cloud mask · Quality', icon: ScanSearch },
-  { title: 'Feature Extraction', subtitle: 'NDVI · EVI · GNDVI', icon: Layers3 },
-  { title: 'Random Forest Model', subtitle: 'Classification / Regression', icon: BrainCircuit },
-  { title: 'Assessment', subtitle: 'Direct / Hierarchical', icon: Workflow },
-];
-function SatelliteIcon(){return <Database size={16} />;}
+export function AssessmentPage({ project, onNavigate }: { project?: Project; onNavigate: (page: 'map' | 'field') => void }) {
+  const items = [
+    { title: 'ขอบเขตแปลง', detail: 'ตำแหน่งและพื้นที่ของสวนยาง', ready: Boolean(project?.boundary) },
+    { title: 'สิทธิ์การใช้พื้นที่', detail: 'เอกสารหรือหลักฐานสิทธิ์ที่ดิน', ready: Boolean(project?.landStatus || project?.landEvidence) },
+    { title: 'ข้อมูลสวนยาง', detail: 'ปีปลูก พันธุ์ยาง และสภาพแปลง', ready: Boolean(project?.plantingYear || project?.dominantSpecies || project?.forestCondition) },
+    { title: 'หลักฐานภาคสนาม', detail: 'บันทึกการสำรวจและภาพถ่าย', ready: Boolean(project?.fieldEvidence) },
+  ];
+  const readyCount = items.filter((item) => item.ready).length;
 
-export function AssessmentPage({ onNavigate }: { onNavigate: (page: PageId) => void }) {
   return <section className="page active">
-    <PageHeader eyebrow="โมเดล AI · สถานะการเตรียมข้อมูล" title="ประเมินข้อมูลด้วย AI" subtitle="รองรับแนวทาง machine learning สำหรับข้อมูลสวนยางพารา" action={<span className="estimate-tag large-tag">ยังไม่มีโมเดลจริง</span>} />
-    <Notice>ไม่มี Training Dataset หรือไฟล์โมเดลในต้นแบบนี้ ขั้นตอนทั้งหมดเป็น <b>ตัวอย่าง Demo</b> ไม่มีผลทำนายจาก AI ที่ผ่านการฝึก</Notice>
-    <Panel title="Pipeline การประเมิน" subtitle="เตรียมจุดเชื่อมต่อสำหรับบริการประมวลผล" action={<span className="mock-tag">WORKFLOW MOCK</span>} className="ai-flow"><div className="flow-steps">{stages.map(({ title, subtitle, icon: Icon }, index) => <div className={`flow-step ${index < 2 ? 'done' : index > 2 ? 'waiting' : ''}`} key={title}><span>0{index + 1}</span><Icon /><b>{title}</b><small>{subtitle}</small><i>{index < 2 ? 'ข้อมูลตัวอย่าง' : index === 2 ? 'รอ Feature API' : 'ยังไม่เชื่อมต่อ'}</i>{index < stages.length - 1 && <span className="flow-arrow">→</span>}</div>)}</div></Panel>
-    <div className="assessment-grid"><Panel title="สถานะโมเดลและข้อมูล" subtitle="ความพร้อมของระบบประเมิน" className="score-panel"><div className="score-content"><div className="model-status-ring"><BrainCircuit size={24} /></div><div><span className="score-level">เตรียมโครงสร้างไว้</span><p>ยังไม่มีการเรียกใช้โมเดลหรือแสดงผลทำนาย ต้องมีชุดข้อมูลฝึกและ model artifact ที่ตรวจสอบแล้ว</p><div className="score-tags"><span>โมเดล <b>ยังไม่เชื่อม</b></span><span>ข้อมูลฝึก <b>ไม่มี</b></span><span>ผลทำนาย <b>ไม่มี</b></span></div></div></div><div className="model-meta"><div><span>ข้อมูลนำเข้า</span><b>Sentinel-2 · spectral bands · indices</b></div><div><span>โมเดลเป้าหมาย</span><b>Random Forest · Classification / Regression</b></div><div><span>แนวทางที่รองรับ</span><b>Direct / Hierarchical</b></div></div></Panel>
-      <Panel title="ข้อมูลที่ต้องใช้ประเมินสวนยาง" subtitle="รายการสำหรับเตรียมชุดข้อมูลก่อนเชื่อมโมเดล" className="model-note"><p className="reference-title">อายุสวน · พันธุ์ยาง · จำนวนต้น · การจัดการแปลง</p><p>การประเมินต้องมีข้อมูลภาคสนามที่ตรวจสอบได้ เช่น ปีปลูกและพันธุ์ยาง จำนวน/ระยะปลูก ประวัติการจัดการ และข้อมูลภาพที่มีแหล่งที่มา พร้อมตรวจความคลาดเคลื่อนกับแปลงจริง ต้นแบบนี้ยังไม่มีชุดข้อมูลฝึกหรือผลวิเคราะห์ทางวิทยาศาสตร์</p><div className="method-box"><b>จุดเชื่อมต่อที่เตรียมไว้</b><span>POST /api/projects/{'{projectId}'}/assessment</span><small>รองรับการส่ง GeoJSON, scene metadata และ features ไป backend</small></div></Panel>
+    <PageHeader eyebrow={`${project?.name ?? 'โครงการสวนยาง'} · ภาพรวมการประเมิน`} title="ประเมินโครงการและคาร์บอน" subtitle="ตรวจข้อมูลที่มีและรายการที่ควรเตรียมก่อนประเมินโครงการ" action={<span className="estimate-tag large-tag">ข้อมูลตัวอย่าง</span>} />
+    <Notice>หน้านี้สรุปความครบถ้วนของข้อมูลเบื้องต้น ยังไม่มีการวิเคราะห์ด้วย AI หรือคำนวณปริมาณคาร์บอนจริง</Notice>
+    <div className="assessment-grid">
+      <Panel title="ความพร้อมของข้อมูล" subtitle={`มีข้อมูลเบื้องต้น ${readyCount} จาก ${items.length} รายการ`} action={<span className="mock-tag">ตรวจจากข้อมูลที่บันทึก</span>} className="score-panel">
+        <div className="simple-readiness-list">{items.map((item) => <div className="simple-readiness-row" key={item.title}><span className={item.ready ? 'is-ready' : 'is-pending'}>{item.ready ? <CheckCircle2 size={18} /> : <CircleAlert size={18} />}</span><span><b>{item.title}</b><small>{item.detail}</small></span><strong>{item.ready ? 'มีข้อมูล' : 'รอข้อมูล'}</strong></div>)}</div>
+      </Panel>
+      <Panel title="คาร์บอนเครดิตเบื้องต้น" subtitle="ยังไม่มีผลคำนวณสำหรับโครงการนี้" action={<span className="estimate-tag">ยังไม่ประเมิน</span>} className="model-note simple-carbon-card">
+        <div className="simple-carbon-value"><span>ปริมาณคาร์บอน</span><b>— <small>tCO₂e</small></b></div>
+        <p>ต้องตรวจข้อมูลจริงและเลือกวิธีการที่เหมาะสมก่อน จึงจะประเมินได้ ตัวเลขนี้ไม่ใช่เครดิตรับรองและไม่ใช่ปริมาณพร้อมขาย</p>
+      </Panel>
     </div>
-    <div className="panel recommendation"><span className="rec-icon">✳</span><div><b>ผลการประเมิน</b><p>รอข้อมูลและ Model API — ไม่มีผลทำนายใน Demo นี้</p></div><Button onClick={() => onNavigate('carbon')}>ไปหน้าคาร์บอนเครดิต <ArrowRight size={13} /></Button></div>
+    <div className="assessment-next-steps">
+      <Panel title="เตรียมข้อมูลต่อ" subtitle="ทำสองรายการนี้ก่อนส่งให้ผู้เชี่ยวชาญตรวจ" className="assessment-next-card"><div className="assessment-action-row"><span><MapPinned size={18} /></span><div><b>ยืนยันตำแหน่งและขอบเขต</b><small>ตรวจพื้นที่แปลงและเอกสารสิทธิ์</small></div><Button onClick={() => onNavigate('map')}>ไปที่แผนที่ <ArrowRight size={13} /></Button></div><div className="assessment-action-row"><span><ClipboardCheck size={18} /></span><div><b>ตรวจรายการภาคสนาม</b><small>บันทึกอายุ พันธุ์ยาง และหลักฐานสวน</small></div><Button onClick={() => onNavigate('field')}>เปิดรายการตรวจ <ArrowRight size={13} /></Button></div></Panel>
+    </div>
   </section>;
 }

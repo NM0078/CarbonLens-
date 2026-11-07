@@ -221,3 +221,25 @@ body { background: #f5f7f4; }
 }
  .report-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
  .report-art > a { position: absolute; z-index: 2; right: 10px; bottom: 9px; max-width: 90%; padding: 4px 7px; border-radius: 5px; color: #fff; background: #132a1da8; font-size: 10px; }
+.simple-readiness-list { display: grid; gap: 0; }
+.simple-readiness-row { display: grid; grid-template-columns: 28px minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #edf0eb; }
+.simple-readiness-row:last-child { border-bottom: 0; }
+.simple-readiness-row > span:first-child { display: grid; place-items: center; }
+.simple-readiness-row .is-ready { color: #398052; }
+.simple-readiness-row .is-pending { color: #bb8d35; }
+.simple-readiness-row b, .simple-readiness-row small { display: block; }
+.simple-readiness-row b { color: #24362b; font-size: 14px; }
+.simple-readiness-row small { margin-top: 3px; color: #536258; font-size: 12px; }
+.simple-readiness-row strong { color: #384c3f; font-size: 12px; }
+.simple-carbon-value { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #edf0eb; color: #33483a; }
+.simple-carbon-value b { color: #254d34; font-size: 28px; }
+.simple-carbon-value small { font-size: 13px; }
+.simple-carbon-card > p { margin: 12px 0 2px; color: #46564b; line-height: 1.7; }
+.assessment-next-steps { margin-top: 14px; }
+.assessment-action-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #edf0eb; }
+.assessment-action-row:last-child { border-bottom: 0; }
+.assessment-action-row > span { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px; color: #28744f; background: #edf5ed; }
+.assessment-action-row > div { flex: 1; min-width: 0; }
+.assessment-action-row b, .assessment-action-row small { display: block; }
+.assessment-action-row small { margin-top: 3px; color: #536258; font-size: 12px; }
+@media (max-width: 600px) { .simple-readiness-row { grid-template-columns: 26px minmax(0,1fr); } .simple-readiness-row strong { grid-column: 2; margin-top: -5px; } .assessment-action-row { flex-wrap: wrap; } .assessment-action-row > .button { margin-left: 50px; } }

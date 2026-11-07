@@ -15,12 +15,6 @@ export const DEMO_SATELLITE = {
   indices: { NDVI: 0.68, EVI: null, GNDVI: null },
 };
 
-export const DEMO_CARBON_ASSESSMENT = {
-  status: 'ข้อมูลไม่เพียงพอ' as const,
-  tco2e: null as number | null,
-  valueThb: null as number | null,
-};
-
 export const INITIAL_FIELD_ITEMS: FieldItem[] = [
   { id: 'boundary', category: 'ขอบเขตและสิทธิ์พื้นที่', title: 'ยืนยันพิกัดขอบเขตแปลง', description: 'ตรวจสอบกับผู้ดูแลพื้นที่และแนวเขตจริง', status: 'ตรวจสอบแล้ว' },
   { id: 'area', category: 'ขอบเขตและสิทธิ์พื้นที่', title: 'ยืนยันขนาดพื้นที่สุทธิ', description: 'ตัดพื้นที่ซ้อนทับหรือพื้นที่ที่ไม่เข้าเกณฑ์', status: 'ตรวจสอบแล้ว' },

@@ -9,7 +9,5 @@ window.CarbonLensApiRoutes = Object.freeze({
   }),
   parcels: Object.freeze({ boundary: '/api/projects/{projectId}/parcels/{parcelId}/boundary' }),
   satellite: Object.freeze({ scenes: '/api/satellite/scenes', indices: '/api/satellite/indices' }),
-  assessment: Object.freeze({ run: '/api/projects/{projectId}/assessment' }),
-  carbon: Object.freeze({ assess: '/api/projects/{projectId}/carbon-assessment' }),
   reports: Object.freeze({ create: '/api/reports', export: '/api/reports/{id}/export' }),
 });

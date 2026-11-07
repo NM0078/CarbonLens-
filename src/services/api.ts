@@ -3,8 +3,6 @@ export const API_ROUTES = {
   projects: { list: '/api/projects', create: '/api/projects', detail: '/api/projects/{id}', update: '/api/projects/{id}', remove: '/api/projects/{id}' },
   parcels: { boundary: '/api/projects/{projectId}/parcels/{parcelId}/boundary' },
   satellite: { scenes: '/api/satellite/scenes', indices: '/api/satellite/indices' },
-  assessment: { run: '/api/projects/{projectId}/assessment' },
-  carbon: { assess: '/api/projects/{projectId}/carbon-assessment' },
   reports: { create: '/api/reports', export: '/api/reports/{id}/export' },
 } as const;
 

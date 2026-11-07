@@ -1,6 +1,6 @@
 # CarbonLens — Rubber Plantation Project Intelligence
 
-เว็บแอปต้นแบบภาษาไทยสำหรับสหกรณ์และผู้พัฒนาโครงการสวนยางพารา สร้างด้วย React, TypeScript, Vite, Tailwind CSS, Recharts และ Leaflet หน้าหลักประกอบด้วย Dashboard, โครงการ, แผนที่, ดาวเทียม, ประเมินศักยภาพ, คาร์บอนเครดิต, ตรวจภาคสนาม และรายงาน
+เว็บแอปต้นแบบภาษาไทยสำหรับสหกรณ์และผู้พัฒนาโครงการสวนยางพารา สร้างด้วย React, TypeScript, Vite, Tailwind CSS, Recharts และ Leaflet หน้าหลักประกอบด้วย Dashboard, โครงการ, แผนที่พร้อมข้อมูลดาวเทียม, ประเมินโครงการและคาร์บอน, ตรวจภาคสนาม และรายงาน
 
 ## เริ่มใช้งาน
 
@@ -38,7 +38,7 @@ pnpm test
 
 ## โครงสร้าง
 
-- `src/pages/` — หน้าจอทั้ง 9 ส่วน รวมหน้าเข้าสู่ระบบ
+- `src/pages/` — หน้าจอหลัก 8 หน้า รวมหน้าเข้าสู่ระบบ โดยรวมการประเมินและสถานะคาร์บอนไว้หน้าเดียว
 - `src/components/` — shell, dialogs, controls, alerts
 - `src/services/api.ts` — typed API client และ route placeholders สำหรับ backend
 - `src/services/projectStore.ts` — localStorage demo store และ CSV export
@@ -54,8 +54,8 @@ pnpm test
 3. เปลี่ยน `src/services/projectStore.ts` ให้เรียก API ใน `src/services/api.ts`; เพิ่ม validation, loading/error states และสิทธิ์เข้าถึง
 4. จัดเก็บ polygon และคำนวณพื้นที่หลักที่ backend ด้วย PostGIS พร้อมตรวจระบบพิกัดและ geometry
 5. เชื่อม Sentinel-2/STAC หรือ Google Earth Engine พร้อม cloud masking, band provenance และการคำนวณ NDVI/EVI/GNDVI
-6. เชื่อมบริการประเมินเมื่อมีชุดข้อมูลฝึกและโมเดลที่ผ่าน validation; บันทึกรุ่นโมเดลและผลตรวจภาคสนาม
-7. ให้ผู้เชี่ยวชาญยืนยันระเบียบวิธี T-VER และข้อมูล baseline, project emissions, leakage, monitoring และ verification ก่อนแสดงตัวเลข tCO₂e
+6. เพิ่มการประเมินคาร์บอนภายหลังเมื่อยืนยันวิธีการที่ใช้ได้และได้รับข้อมูลภาคสนามครบถ้วน
+7. ให้ผู้เชี่ยวชาญตรวจข้อมูลและวิธีการ T-VER ก่อนแสดงตัวเลข tCO₂e
 8. เชื่อมรายงาน PDF/XLSX และบันทึก audit trail ฝั่ง backend
 
-รายการ API ที่เตรียมไว้ครอบคลุม projects, parcels/boundaries, satellite scenes/indices, assessment, carbon และ reports
+รายการ API ที่เตรียมไว้ครอบคลุมบัญชีผู้ใช้, projects, parcels/boundaries, satellite scenes/indices และ reports
