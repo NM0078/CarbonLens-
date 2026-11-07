@@ -19,7 +19,7 @@ export function saveProjects(projects: Project[], userId?: string): void {
 
 export function exportProjectsCsv(projects: Project[]): string {
   const rows = [
-    ['ชื่อโครงการ', 'จังหวัด', 'อำเภอ', 'ประเภทป่า', 'พื้นที่ไร่', 'จำนวนแปลง', 'สถานะ'],
+    ['ชื่อโครงการ', 'จังหวัด', 'อำเภอ', 'ประเภทสวนยาง', 'พื้นที่ไร่', 'จำนวนแปลง', 'สถานะ'],
     ...projects.map((project) => [project.name, project.province, project.district, project.forestType, String(project.area), String(project.plots), project.status]),
   ];
   return `\uFEFF${rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(',')).join('\r\n')}`;
