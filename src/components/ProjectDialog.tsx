@@ -56,7 +56,7 @@ export function ProjectDialog({ project, onClose, onSave }: { project: Project |
     <h3 className="intake-form-section">สิทธิพื้นที่และขอบเขต</h3>
     <label>สถานะสิทธิ/การใช้พื้นที่<input value={form.landStatus || ''} onChange={(e) => update('landStatus', e.target.value)} placeholder="ระบุข้อมูลที่ทราบ หรือเขียนว่า รอตรวจสอบ" /></label>
     <label>เอกสารสิทธิ์หรือหลักฐานที่มี<textarea rows={2} value={form.landEvidence || ''} onChange={(e) => update('landEvidence', e.target.value)} placeholder="เช่น หนังสือรับรองพื้นที่ เอกสารจากชุมชน หรือยังไม่มี" /></label>
-    <p className="intake-map-hint">ขอบเขตพิกัดและการคำนวณพื้นที่จากแผนที่: บันทึกต่อได้ที่เมนู “แผนที่และขอบเขต” หลังสร้างแปลง</p>
+    <p className="intake-map-hint">กำหนดขอบเขตบนภาพถ่ายดาวเทียมและคำนวณพื้นที่ได้ที่เมนู “ภาพถ่ายดาวเทียมและพื้นที่” หลังสร้างแปลง</p>
 
     <h3 className="intake-form-section">สภาพสวนยางและกิจกรรมโครงการ</h3>
     <div className="form-two"><label>กิจกรรมหลัก<select value={form.projectActivity || ''} onChange={(e) => update('projectActivity', e.target.value)}><option value="">เลือกกิจกรรม</option>{['ปลูกและดูแลยางพารา','จัดการสวนยางให้เพิ่มการกักเก็บคาร์บอน','ปรับปรุงการใช้ปุ๋ย/สารปรับปรุงดิน','จัดการสวนยางผสม','อื่น ๆ'].map((activity) => <option key={activity}>{activity}</option>)}</select></label><label>ปีปลูกสวนยาง (พ.ศ.)<input type="number" min="2400" max="2700" value={form.plantingYear || ''} onChange={(e) => update('plantingYear', Number(e.target.value))} placeholder="เช่น 2568" /></label></div>

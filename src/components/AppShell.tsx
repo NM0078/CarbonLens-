@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import {
   Bell, ChevronDown, ClipboardCheck, Database, FileText, LayoutDashboard,
-  LockKeyhole, MapPinned, Menu, TreePine, Sprout, X,
+  LockKeyhole, Satellite, Menu, TreePine, Sprout, X,
 } from 'lucide-react';
 import type { PageId, Project } from '../types';
 import type { AuthUser } from '../services/auth';
@@ -10,7 +10,7 @@ import { FloatingMascotChat } from './FloatingMascotChat';
 const NAV: Array<{ id: PageId; label: string; icon: typeof LayoutDashboard }> = [
   { id: 'dashboard', label: 'ภาพรวมโครงการ', icon: LayoutDashboard },
   { id: 'projects', label: 'แปลงของฉัน', icon: Database },
-  { id: 'map', label: 'แผนที่และขอบเขต', icon: MapPinned },
+  { id: 'map', label: 'ภาพถ่ายดาวเทียมและพื้นที่', icon: Satellite },
   { id: 'assessment', label: 'ประเมินโครงการและคาร์บอน', icon: TreePine },
   { id: 'field', label: 'ตรวจสอบภาคสนาม', icon: ClipboardCheck },
   { id: 'reports', label: 'รายงาน', icon: FileText },
