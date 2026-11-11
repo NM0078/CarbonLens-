@@ -248,3 +248,44 @@ body { background: #f5f7f4; }
 .embedded-map-section{margin:18px 0 24px}.embedded-map-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.embedded-map-heading h2{font-size:18px;margin:0}.embedded-map-section .map-workspace{margin:0}.embedded-map-section .boundary-side{align-self:stretch}
 
 .project-document-actions{display:flex;gap:6px;flex-wrap:wrap}.document-download-button{font-size:12px}
+
+/* Device-size refinements: keep the same workflow usable from phones to iPad. */
+@media (max-width: 1024px) and (min-width: 901px) {
+  .sidebar { width: 220px; padding-inline: 13px; }
+  .main-area { margin-left: 220px; }
+  .content { padding-inline: 24px; }
+  .topbar { padding-inline: 24px; }
+  .dashboard-grid, .dashboard-visual-grid, .assessment-grid { grid-template-columns: 1fr; }
+  .map-workspace { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .topbar { position: sticky; }
+  .top-actions { min-width: 0; }
+  .guest-mode-pill { display: none; }
+  .sidebar { width: min(84vw, 320px); padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+  .content { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
+  .page-heading > .button { width: 100%; }
+  .embedded-map-heading { align-items: flex-start; flex-wrap: wrap; }
+  .embedded-map-heading .button { width: 100%; min-height: 44px; }
+  .simple-carbon-value { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .project-document-actions .button { flex: 1 1 150px; min-height: 42px; }
+}
+
+@media (max-width: 480px) {
+  .login-art { min-height: 190px; height: 27dvh; }
+  .login-brand { margin-top: 2px; }
+  .login-photo-controls { inset-inline: 10px; }
+  .login-sound-toggle { top: 12px; left: 12px; }
+  .login-copy { left: 18px; bottom: 17px; }
+  .login-copy h1 { font-size: clamp(20px, 7vw, 25px); line-height: 1.25; }
+  .modal-backdrop { align-items: end; padding: 0; }
+  .modal-backdrop .dialog-card { max-height: min(88dvh, 760px); border-radius: 18px 18px 0 0; }
+  .project-form { padding: 22px 16px calc(22px + env(safe-area-inset-bottom)); }
+  .check-row { align-items: flex-start; flex-wrap: wrap; }
+  .check-row .field-item-copy { min-width: calc(100% - 28px); }
+  .check-row .verification-state { margin-left: 24px; min-height: 40px; max-width: calc(100% - 24px); }
+  .check-row .attach-btn { min-height: 40px; margin-left: 24px; display: inline-flex; align-items: center; }
+  .assessment-action-row > .button { width: calc(100% - 50px); margin-left: 50px; min-height: 42px; }
+  .carbonlens-chat-widget { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+}
