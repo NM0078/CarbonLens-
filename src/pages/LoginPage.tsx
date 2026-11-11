@@ -71,7 +71,7 @@ export function LoginPage({ onLogin, onRegister, onGoogle, onForgot, onGuest }: 
       <Button variant="secondary" className="google-auth" type="button" onClick={async () => { setError(''); setBusy(true); try { await onGoogle(mode); } catch (caught) { setError(caught instanceof Error ? caught.message : 'ยังเชื่อมต่อ Google ไม่ได้'); } finally { setBusy(false); } }} disabled={busy}><b className="google-mark">G</b>{mode === 'login' ? 'เข้าสู่ระบบด้วย Google' : 'สมัคร / เชื่อมบัญชี Google'}</Button>
       <Button variant="secondary" className="guest-entry" type="button" onClick={onGuest}>เยี่ยมชมตัวอย่างโดยไม่เข้าสู่ระบบ</Button>
       <div className="auth-switch">{mode === 'login' ? <>ยังไม่มีบัญชีใช่ไหม? <button type="button" onClick={() => changeMode('register')}>ลงทะเบียน</button></> : <>มีบัญชีแล้ว? <button type="button" onClick={() => changeMode('login')}>เข้าสู่ระบบ</button></>}</div>
-      <div className="login-demo"><b><ShieldCheck size={14} /> บัญชีสาธิตในเบราว์เซอร์นี้</b><span>ต้องลงทะเบียนก่อนเข้าสู่ระบบ ข้อมูลบัญชีไม่ส่งไปยังเซิร์ฟเวอร์</span></div>
+      <div className="login-demo"><b><ShieldCheck size={14} /> บัญชีเก็บที่ระบบหลังบ้าน</b><span>ต้องลงทะเบียนก่อนเข้าสู่ระบบ รหัสผ่านถูกเข้ารหัสก่อนเก็บ และใช้บัญชีเดียวกันได้ทุกเครื่อง</span></div>
       <small className="login-legal">ยังไม่ใช่ระบบยืนยันตัวตนสำหรับใช้งานจริง · Google OAuth ต้องตั้งค่า Client ID และ backend</small>
     </form>
   </section>;

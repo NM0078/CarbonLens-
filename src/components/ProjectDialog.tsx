@@ -24,7 +24,8 @@ export function ProjectDialog({ project, onClose, onSave }: { project: Project |
       dominantSpecies: project.dominantSpecies || '', plantingYear: project.plantingYear || 0,
       forestCondition: project.forestCondition || '', fieldEvidence: project.fieldEvidence || '', methodology: project.methodology || '',
       baselineHistory: project.baselineHistory || '', inventoryNotes: project.inventoryNotes || '', description: project.description,
-      area: project.area, plots: project.plots, status: project.status,
+      // ช่องนี้คือพื้นที่ที่ผู้ใช้กรอกเอง ไม่ใช่พื้นที่ที่หลังบ้านคำนวณจากขอบเขต
+      area: project.declaredArea ?? project.area, plots: project.plots, status: project.status,
     } : { ...EMPTY_FORM });
   }, [project]);
   const update = (field: keyof ProjectFormValues, value: string | number) => setForm((current) => ({ ...current, [field]: value }));
@@ -68,6 +69,6 @@ export function ProjectDialog({ project, onClose, onSave }: { project: Project |
     <label>ข้อมูลสำรวจต้นยาง/ตัวอย่างแปลง<textarea rows={2} value={form.inventoryNotes || ''} onChange={(e) => update('inventoryNotes', e.target.value)} placeholder="เช่น พันธุ์ยาง จำนวนต้น เส้นรอบวง/ความสูง ปีสำรวจ และข้อมูลปุ๋ย หากมี" /></label>
     <label>บันทึกการสำรวจและหลักฐานภาคสนาม<textarea rows={2} value={form.fieldEvidence || ''} onChange={(e) => update('fieldEvidence', e.target.value)} placeholder="รายการที่สำรวจ วันที่สำรวจ ภาพถ่าย หรือข้อมูลที่ยังต้องยืนยัน" /></label>
     <label>รายละเอียดเพิ่มเติม<textarea rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} placeholder="เป้าหมายและรายละเอียดโครงการสวนยาง" /></label>
-    <Button variant="primary" className="dialog-submit" type="submit">{project ? 'บันทึกข้อมูลแปลง' : 'บันทึกข้อมูลแปลง'}</Button><small>ต้นแบบนี้บันทึกในเบราว์เซอร์ ยังไม่ส่งขึ้น backend และไม่ใช่ผลประเมินหรือเครดิตรับรอง</small>
+    <Button variant="primary" className="dialog-submit" type="submit">{project ? 'บันทึกข้อมูลแปลง' : 'บันทึกข้อมูลแปลง'}</Button><small>ข้อมูลบันทึกที่ระบบหลังบ้าน เป็นข้อมูลที่ผู้ใช้แจ้ง ยังไม่ได้ยืนยัน และไม่ใช่ผลประเมินหรือเครดิตรับรอง</small>
   </form></div>;
 }

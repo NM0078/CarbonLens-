@@ -17,6 +17,7 @@ export interface Project {
   status: ProjectStatus;
   updated: string;
   boundary?: Feature<Polygon>;
+  declaredArea?: number; // พื้นที่ที่ผู้ใช้กรอกเอง (ไร่) แยกจาก area ซึ่งใช้ค่าจากขอบเขตเมื่อมีแล้ว
   parcelName?: string;
   village?: string;
   landStatus?: string;

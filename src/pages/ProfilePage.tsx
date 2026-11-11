@@ -10,7 +10,7 @@ export function ProfilePage({ user, onLogout, onGoogleLink }: {
   const initials = [user.firstName, user.lastName].map((part) => Array.from(part.trim())[0] ?? '').join('').toLocaleUpperCase('th-TH');
   return <section className="page active profile-page">
     <PageHeader eyebrow="บัญชีผู้ใช้" title="โปรไฟล์ของฉัน" subtitle="ข้อมูลบัญชีและการเชื่อมต่อของคุณ" />
-    <Notice>บัญชีนี้เป็นโหมดวาธิต ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น</Notice>
+    <Notice>บัญชีนี้เก็บที่ระบบหลังบ้าน ใช้เข้าสู่ระบบจากเครื่องอื่นได้</Notice>
     <Panel title="ข้อมูลว่วนตัว" subtitle="ข้อมูลจากการลงทะเบียน" className="user-profile-panel">
       <div className="user-profile-heading"><span className="user-profile-avatar">{initials}</span><div><h2>{user.firstName} {user.lastName}</h2><p><Mail size={15} /> {user.email}</p></div><span className="account-status"><ShieldCheck size={15} /> บัญชีวาธิต</span></div>
       <div className="profile-details">

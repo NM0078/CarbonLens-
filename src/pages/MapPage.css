@@ -1,0 +1,11 @@
+/* หมายเหตุ: ลบกฎ .editor-map svg ออกจาก legacy-design.css แล้ว เพราะทำให้ชั้นวาดของ Leaflet มีขนาด 0×0
+   รูปแปลงที่วาดจึงไม่แสดง และคลิกแก้ไขไม่ได้ (กฎนั้นใช้กับแผนที่ภาพนิ่งรุ่นเก่า) */
+
+/* ปุ่มบนแถบแผนที่เพิ่มเป็น 5 ปุ่ม ต้องขึ้นบรรทัดใหม่ได้ ไม่ให้ล้นกรอบ */
+.map-tools { flex-wrap: wrap; justify-content: flex-end; }
+
+/* แผงโหมดเดินรอบแปลงด้วย GPS (อยู่เหนือแผนที่) */
+.walk-panel { display: grid; gap: 10px; margin: 0 0 12px; padding: 12px 14px; border-radius: 12px; background: #fff7e6; border: 1px solid #f3d59b; color: #5b4310; }
+.walk-panel > div:first-child { display: grid; gap: 4px; }
+.walk-panel span { font-size: 13px; line-height: 1.7; }
+.walk-actions { display: flex; flex-wrap: wrap; gap: 8px; }

@@ -1,0 +1,54 @@
+/* ผลตรวจจริงของแปลง (PlotAnalysis.tsx) ใช้ชื่อขึ้นต้น pa- เพื่อไม่ชนกับสไตล์ภาพตัวอย่างเดิม */
+.pa-stack { display: grid; gap: 18px; margin-top: 18px; }
+.pa-error { padding: 10px 14px; border-radius: 10px; background: #fdf0ec; color: #8a3b24; border: 1px solid #f1cfc3; line-height: 1.6; }
+.pa-muted { margin: 8px 0 0; color: #5d6b61; font-size: 13px; line-height: 1.7; }
+.pa-badge { padding: 4px 10px; border-radius: 999px; background: #e3f1e4; color: #24603a; font-size: 12px; font-weight: 700; }
+
+.pa-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.pa-image-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.pa-image { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: #eef2ec; border: 1px solid #dfe6dc; }
+.pa-image img { width: 100%; height: 100%; object-fit: contain; display: block; background: #0f1a12; }
+.pa-image-state { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; color: #3f5045; line-height: 1.7; background: #eef2ec; }
+.pa-image-meta { display: grid; gap: 10px; }
+.pa-image-meta > div { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #edf0eb; }
+.pa-image-meta small { color: #66746a; }
+.pa-image-meta b { color: #254d34; text-align: right; }
+.pa-scale span { display: flex; align-items: center; gap: 6px; }
+.pa-scale i { display: inline-block; width: 110px; height: 10px; border-radius: 5px; }
+.pa-scale em { font-style: normal; font-size: 12px; color: #4b5a50; }
+
+.pa-steps { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 6px; }
+.pa-steps li { display: flex; align-items: center; gap: 10px; color: #46564b; }
+.pa-steps li span { width: 10px; height: 10px; border-radius: 50%; background: #cfd8cc; flex: none; }
+.pa-step-done span { background: #3f8f5a !important; }
+.pa-step-running span { background: #e0a526 !important; animation: pa-pulse 1s infinite alternate; }
+.pa-step-failed span { background: #c4553a !important; }
+.pa-step-skipped { opacity: .6; }
+@keyframes pa-pulse { from { opacity: .4; } to { opacity: 1; } }
+
+.pa-status { display: inline-block; margin-bottom: 12px; padding: 6px 14px; border-radius: 999px; font-weight: 700; }
+.pa-status-verified { background: #e3f1e4; color: #24603a; }
+.pa-status-review { background: #fbf1d9; color: #7a5a12; }
+.pa-status-rejected { background: #fbe7e1; color: #8a3b24; }
+.pa-status-pending { background: #eef2ec; color: #46564b; }
+.pa-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0 4px; }
+.pa-grid > div, .pa-carbon-main > div { display: grid; gap: 4px; padding: 12px; border-radius: 10px; background: #f6f8f3; }
+.pa-grid small, .pa-carbon-main small { color: #66746a; }
+.pa-grid b { color: #254d34; font-size: 20px; }
+.pa-list { margin: 10px 0 0; padding-left: 18px; color: #5d6b61; font-size: 13px; line-height: 1.7; }
+
+.pa-carbon-main { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr; gap: 10px; }
+.pa-carbon-main b { color: #254d34; font-size: 22px; }
+.pa-carbon-main em { font-style: normal; font-size: 13px; color: #4b5a50; font-weight: 500; }
+.pa-carbon-empty { margin: 4px 0; padding: 14px; border-radius: 10px; background: #f6f8f3; color: #33483a; line-height: 1.7; }
+.pa-carbon-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; color: #5d6b61; }
+
+@media (max-width: 900px) {
+  .pa-image-row, .pa-carbon-main { grid-template-columns: 1fr; }
+  .pa-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* จอมือถือ: ตัวอักษรของธีมใหญ่ 2 คอลัมน์จะตัดคำทีละพยางค์ จึงเรียงเป็นแถวเดียว */
+@media (max-width: 520px) {
+  .pa-grid { grid-template-columns: 1fr; }
+  .pa-grid > div { grid-template-columns: 1fr auto; align-items: center; }
+}
