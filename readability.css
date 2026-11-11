@@ -290,6 +290,8 @@ body .login-form small { font-weight: 600; }
 }
 .login-art-photo { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .login-art-photo.photo-changing { animation: login-photo-in .8s ease both, login-photo-drift 5s ease-in-out infinite alternate; }
+.login-art-image { position: absolute; z-index: -2; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0; transition: opacity .45s ease; }
+.login-art-image.is-active { opacity: 1; }
 .login-art-video { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; background: #183c29; }
 .login-art-shade { position: absolute; z-index: -1; inset: 0; background: linear-gradient(180deg, rgba(12, 34, 22, .12) 0%, rgba(12, 34, 22, .78) 100%); }
 .login-art-motion { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
