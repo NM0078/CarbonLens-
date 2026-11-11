@@ -559,18 +559,8 @@ body .app-shell .dashboard-hero .hero-benefits span,
 body .app-shell #page-dashboard > .page-heading .hero-benefits span { color: #fff !important; }
 .hero-credit, body .app-shell .hero-credit, body .app-shell .hero-credit a, .hero-slide-count { color: #fff !important; }
 .hero-slide-count { margin-left: 12px; font-weight: 800; }
-.hero-slide-controls { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; pointer-events: none; }
-.hero-slide-controls button,
-body .app-shell .hero-slide-controls button { display: grid; place-items: center; width: 48px; height: 48px; min-height: 48px; padding: 0 0 4px; border: 2px solid rgba(255,255,255,.9); border-radius: 50%; background: rgba(10,32,19,.68); color: #fff !important; font-size: 36px !important; font-weight: 700; line-height: 1; cursor: pointer; pointer-events: auto; box-shadow: 0 3px 14px #0005; }
-.hero-slide-controls button:hover,
-.hero-slide-controls button:focus-visible { background: #285b3a; outline: 3px solid #fff; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   .hero-slide { transition: none; transform: none; }
-}
-@media (max-width: 780px) {
-  .hero-slide-controls { padding: 0 9px; }
-  .hero-slide-controls button,
-  body .app-shell .hero-slide-controls button { width: 40px; height: 40px; min-height: 40px; font-size: 30px !important; }
 }
 .forest-journey-steps { gap: 15px; }
 .forest-journey-step { min-height: 222px; padding: 14px 11px; }
